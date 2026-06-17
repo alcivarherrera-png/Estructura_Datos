@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Laboratorio: Clase Conversiones</title>
+  <style>
+    /* Estilo oscuro simple de estudiante */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e1e1e;
+      color: #ffffff;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #00ffcc; /* Verde agua */
+    }
+    .subtitulo {
+      text-align: center;
+      font-style: italic;
+      color: #aaaaaa;
+    }
+    .seccion {
+      background-color: #2d2d2d;
+      border: 2px solid #555555;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+    }
+    .titulo-seccion {
+      font-weight: bold;
+      color: #ff9900; /* Naranja */
+      margin-bottom: 10px;
+    }
+    pre {
+      background-color: #111111;
+      color: #00ff00; /* Verde consola */
+      padding: 10px;
+      border: 1px dashed #555;
+      font-family: monospace;
+    }
+    .controles {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    input {
+      width: 100px;
+      padding: 4px;
+      background-color: #444444;
+      color: white;
+      border: 1px solid #777777;
+    }
+    button {
+      background-color: #ff3366; /* Fucsia */
+      color: white;
+      border: none;
+      padding: 6px 15px;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 3px;
+    }
+    button:hover {
+      background-color: #ff0044;
+    }
+    .resultado {
+      background-color: #000000;
+      border: 1px solid #ff9900;
+      padding: 10px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      color: #33ccff; /* Azul brillante */
+    }
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #888888;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Laboratorio: Conversión de Tipos en JS</h1>
+<p class="subtitulo">Archivo fuente: <code>clase-conversiones.js</code></p>
+
+<div class="seccion">
+  <div class="titulo-seccion">1. Convertir a Entero (parseInt)</div>
+  <pre>
+const string = '47';
+const integer = parseInt(string);
+console.log(typeof integer);
+  </pre>
+  <div class="controles">
+    <label>Texto a convertir:</label>
+    <input type="text" id="val1" value="47">
+    <button onclick="runParseInt()">Ejecutar</button>
+  </div>
+  <div class="resultado" id="res1">El resultado aparecerá aquí...</div>
+</div>
+
+<div class="seccion">
+  <div class="titulo-seccion">2. Convertir a Decimal (parseFloat)</div>
+  <pre>
+const stringDecimal = '3.14';
+const float = parseFloat(stringDecimal);
+console.log(float);
+  </pre>
+  <div class="controles">
+    <label>Texto decimal:</label>
+    <input type="text" id="val2" value="3.14">
+    <button onclick="runParseFloat()">Ejecutar</button>
+  </div>
+  <div class="resultado" id="res2">El resultado aparecerá aquí...</div>
+</div>
+
+<div class="seccion">
+  <div class="titulo-seccion">3. Conversión Binaria (Base 2)</div>
+  <pre>
+const binary = '10010';
+const decimal = parseInt(binary, 2);
+console.log(decimal);
+  </pre>
+  <div class="controles">
+    <label>Número Binario:</label>
+    <input type="text" id="val3" value="10010">
+    <button onclick="runBinario()">Ejecutar</button>
+  </div>
+  <div class="resultado" id="res3">El resultado aparecerá aquí...</div>
+</div>
+
+<div class="seccion">
+  <div class="titulo-seccion">4. Conversión Implícita (Coerción)</div>
+  <pre>
+const suma = 3 - true;
+console.log(suma);
+  </pre>
+  <div class="controles">
+    <label>Número (3):</label>
+    <input type="number" id="val4_num" value="3" style="width:50px;">
+    <label>Restar true (vale 1):</label>
+    <button onclick="runCoercion()">Ejecutar</button>
+  </div>
+  <div class="resultado" id="res4">El resultado aparecerá aquí...</div>
+</div>
+
+<div class="footer">
+  <p>Fin del laboratorio: clase-conversiones</p>
+</div>
+
+<script>
+  // Funciones que imitan exactamente la lógica de tu clase
+
+  function runParseInt() {
+    var txt = document.getElementById('val1').value;
+    var integer = parseInt(txt);
+    
+    document.getElementById('res1').textContent = 
+      'Valor convertido: ' + integer + '\n' +
+      'typeof integer -> "' + typeof integer + '"';
+  }
+
+  function runParseFloat() {
+    var txt = document.getElementById('val2').value;
+    var float = parseFloat(txt);
+    
+    document.getElementById('res2').textContent = 
+      'Valor convertido: ' + float + '\n' +
+      'typeof float -> "' + typeof float + '"';
+  }
+
+  function runBinario() {
+    var bin = document.getElementById('val3').value;
+    var decimal = parseInt(bin, 2);
+    
+    document.getElementById('res3').textContent = 
+      'Binario "' + bin + '" en base 10 es = ' + decimal;
+  }
+
+  function runCoercion() {
+    var num = parseInt(document.getElementById('val4_num').value);
+    // En JS, true se convierte a 1 al restar
+    var resultado = num - true; 
+    
+    document.getElementById('res4').textContent = 
+      'Operación: ' + num + ' - true\n' +
+      'Resultado en consola = ' + resultado + '   (porque true equivale a 1)';
+  }
+</script>
+
+</body>
+</html>
