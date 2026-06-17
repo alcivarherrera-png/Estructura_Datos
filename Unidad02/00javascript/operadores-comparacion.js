@@ -94,3 +94,11 @@ if (!tieneEntrada || esInvitado) {
 } else {
     console.log("No puede ingresar")
 }
+
+const a = 10
+const b = 20
+const c = "30"
+a == b
+a === b
+a === c
+a == c
