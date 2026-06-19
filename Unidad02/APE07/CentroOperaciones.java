@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class CentroOperaciones {
+    
     private ArrayList<Paquete> inventario;
     private Queue<Paquete> cola;
 
