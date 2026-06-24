@@ -1,4 +1,4 @@
-// Sistema de Gestión de Turnos en un Banco
+
 // Estructura de Datos: Cola (Queue)
 
 class ColaTurnos {
@@ -26,9 +26,6 @@ class ColaTurnos {
         console.log(this.turnos);
     }
 }
-
-// Simulación
-
 const banco = new ColaTurnos();
 
 banco.agregarCliente("Juan");
