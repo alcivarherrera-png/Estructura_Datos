@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sistema de Gestión de Entrega de Paquetes</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0d1117;
+      color: #e6edf3;
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #161b22, #1c2a3a);
+      border-bottom: 1px solid #30363d;
+      padding: 24px 40px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    header .icon { font-size: 2.2rem; }
+
+    header h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #58a6ff;
+      letter-spacing: 0.5px;
+    }
+
+    header p {
+      font-size: 0.82rem;
+      color: #8b949e;
+      margin-top: 2px;
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    /* ── STATS ── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+
+    .stat-card:hover { border-color: #58a6ff; }
+
+    .stat-card .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      display: block;
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.78rem;
+      color: #8b949e;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .blue   { color: #58a6ff; }
+    .green  { color: #3fb950; }
+    .red    { color: #f85149; }
+    .yellow { color: #d29922; }
+
+    /* ── GRID PRINCIPAL ── */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    /* ── CARDS ── */
+    .card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #30363d;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-header h2 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge {
+      font-size: 0.72rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-blue   { background: #1f3a5f; color: #58a6ff; }
+    .badge-red    { background: #3d1a1a; color: #f85149; }
+    .badge-green  { background: #1a3a25; color: #3fb950; }
+    .badge-yellow { background: #3a2d0a; color: #d29922; }
+
+    .card-body { padding: 16px 20px; }
+
+    /* ── FORMULARIO ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+
+    .form-group label {
+      font-size: 0.75rem;
+      color: #8b949e;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .form-group input, .form-group select {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: #e6edf3;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus { border-color: #58a6ff; }
+
+    .form-group select option { background: #161b22; }
+
+    /* ── BOTONES ── */
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background: #1f6feb;
+      color: #fff;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-primary:hover { background: #388bfd; }
+
+    .btn-danger {
+      background: #da3633;
+      color: #fff;
+    }
+
+    .btn-danger:hover { background: #f85149; }
+
+    .btn-success {
+      background: #238636;
+      color: #fff;
+    }
+
+    .btn-success:hover { background: #3fb950; }
+
+    .btn-warning {
+      background: #9e6a03;
+      color: #fff;
+    }
+
+    .btn-warning:hover { background: #d29922; }
+
+    .btn-ghost {
+      background: #21262d;
+      color: #e6edf3;
+      border: 1px solid #30363d;
+    }
+
+    .btn-ghost:hover { background: #30363d; }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    /* ── LISTA DE PAQUETES ── */
+    .pkg-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 320px;
+      overflow-y: auto;
+    }
+
+    .pkg-list::-webkit-scrollbar { width: 5px; }
+    .pkg-list::-webkit-scrollbar-track { background: #0d1117; }
+    .pkg-list::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+
+    .pkg-item {
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.83rem;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .pkg-item.urgente { border-left: 3px solid #f85149; }
+    .pkg-item.normal  { border-left: 3px solid #58a6ff; }
+
+    .pkg-name { font-weight: 600; color: #e6edf3; }
+    .pkg-meta { color: #8b949e; font-size: 0.78rem; }
+    .pkg-cost { color: #3fb950; font-weight: 600; white-space: nowrap; }
+
+    .pkg-pos {
+      background: #21262d;
+      color: #8b949e;
+      border-radius: 4px;
+      padding: 2px 7px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .empty-msg {
+      text-align: center;
+      color: #484f58;
+      font-size: 0.85rem;
+      padding: 32px 0;
+    }
+
+    /* ── PUNTEROS ── */
+    .pointer-display {
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 14px;
+    }
+
+    .pointer-item { text-align: center; }
+
+    .pointer-val {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #58a6ff;
+      display: block;
+    }
+
+    .pointer-label {
+      font-size: 0.7rem;
+      color: #8b949e;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    /* ── HISTORIAL ── */
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+
+    .history-list::-webkit-scrollbar { width: 5px; }
+    .history-list::-webkit-scrollbar-track { background: #0d1117; }
+    .history-list::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+
+    .history-item {
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-left: 3px solid #3fb950;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 0.82rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    /* ── BUSQUEDA ── */
+    .search-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .search-row input {
+      flex: 1;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: #e6edf3;
+      font-size: 0.88rem;
+      outline: none;
+    }
+
+    .search-row input:focus { border-color: #58a6ff; }
+
+    .search-result {
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 0.84rem;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8b949e;
+    }
+
+    .search-result.found {
+      border-color: #3fb950;
+      color: #3fb950;
+    }
+
+    .search-result.not-found {
+      border-color: #f85149;
+      color: #f85149;
+    }
+
+    /* ── LOG ── */
+    .log-area {
+      background: #0d1117;
+      border: 1px solid #21262d;
+      border-radius: 8px;
+      padding: 14px;
+      max-height: 220px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.78rem;
+    }
+
+    .log-area::-webkit-scrollbar { width: 5px; }
+    .log-area::-webkit-scrollbar-track { background: #0d1117; }
+    .log-area::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+
+    .log-line { padding: 2px 0; line-height: 1.6; }
+    .log-line.info    { color: #58a6ff; }
+    .log-line.success { color: #3fb950; }
+    .log-line.warning { color: #d29922; }
+    .log-line.error   { color: #f85149; }
+    .log-line.muted   { color: #484f58; }
+
+    /* ── REPORTE ── */
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .report-table th {
+      background: #21262d;
+      color: #8b949e;
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .report-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #21262d;
+      color: #e6edf3;
+    }
+
+    .report-table tr:last-child td { border-bottom: none; }
+    .report-table tr:hover td { background: #1c2128; }
+
+    .report-wrapper {
+      max-height: 280px;
+      overflow-y: auto;
+    }
+
+    .report-wrapper::-webkit-scrollbar { width: 5px; }
+    .report-wrapper::-webkit-scrollbar-track { background: #0d1117; }
+    .report-wrapper::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+
+    /* ── FULL WIDTH CARD ── */
+    .full-card { margin-bottom: 24px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="icon">📦</div>
+  <div>
+    <h1>Sistema de Gestión de Entrega de Paquetes</h1>
+    <p>Cola Circular FIFO · Pila LIFO · Merge Sort · Rastreo Recursivo</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat-card">
+      <span class="stat-number blue" id="stat-fifo">0</span>
+      <span class="stat-label">Cola FIFO (normales)</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number red" id="stat-lifo">0</span>
+      <span class="stat-label">Pila LIFO (urgentes)</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number green" id="stat-entregados">0</span>
+      <span class="stat-label">Entregados</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number yellow" id="stat-costo">$0.00</span>
+      <span class="stat-label">Costo total cobrado</span>
+    </div>
+  </div>
+
+  <!-- GRID PRINCIPAL -->
+  <div class="main-grid">
+
+    <!-- REGISTRAR PAQUETE -->
+    <div class="card">
+      <div class="card-header">
+        <h2>📝 Registrar Paquete</h2>
+      </div>
+      <div class="card-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" id="inp-nombre" placeholder="Ej: Laptop" />
+          </div>
+          <div class="form-group">
+            <label>Peso (kg)</label>
+            <input type="number" id="inp-peso" placeholder="Ej: 2.5" min="0.1" step="0.1" />
+          </div>
+          <div class="form-group" style="grid-column: 1/-1">
+            <label>Destino</label>
+            <input type="text" id="inp-destino" placeholder="Ej: Av. Principal 123" />
+          </div>
+          <div class="form-group" style="grid-column: 1/-1">
+            <label>Tipo</label>
+            <select id="inp-urgente">
+              <option value="false">📦 Normal — Cola FIFO</option>
+              <option value="true">🔴 Urgente — Pila LIFO</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="registrarPaquete()">
+          ➕ Registrar Paquete
+        </button>
+      </div>
+    </div>
+
+    <!-- COLA CIRCULAR FIFO -->
+    <div class="card">
+      <div class="card-header">
+        <h2>🔵 Cola de Despacho <span style="color:#8b949e;font-weight:400;font-size:0.8rem">(FIFO)</span></h2>
+        <span class="badge badge-blue">CIRCULAR</span>
+      </div>
+      <div class="card-body">
+        <div class="pointer-display">
+          <div class="pointer-item">
+            <span class="pointer-val" id="ptr-inicio">0</span>
+            <span class="pointer-label">Puntero Inicio</span>
+          </div>
+          <div class="pointer-item">
+            <span class="pointer-val" id="ptr-fin">0</span>
+            <span class="pointer-label">Puntero Fin</span>
+          </div>
+          <div class="pointer-item">
+            <span class="pointer-val" id="ptr-activos">0</span>
+            <span class="pointer-label">Activos</span>
+          </div>
+          <div class="pointer-item">
+            <span class="pointer-val blue">25,000</span>
+            <span class="pointer-label">Capacidad</span>
+          </div>
+        </div>
+        <div class="pkg-list" id="lista-fifo">
+          <div class="empty-msg">Cola vacía</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PILA LIFO -->
+    <div class="card">
+      <div class="card-header">
+        <h2>🔴 Pila de Urgentes <span style="color:#8b949e;font-weight:400;font-size:0.8rem">(LIFO)</span></h2>
+        <span class="badge badge-red">URGENTE</span>
+      </div>
+      <div class="card-body">
+        <div class="btn-row">
+          <button class="btn btn-danger" onclick="procesarEntrega()">🚚 Procesar Entrega</button>
+          <button class="btn btn-ghost"  onclick="procesarTodo()">🔁 Procesar Todo</button>
+        </div>
+        <div class="pkg-list" id="lista-lifo">
+          <div class="empty-msg">Pila vacía</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORIAL -->
+    <div class="card">
+      <div class="card-header">
+        <h2>✅ Historial de Entregas</h2>
+        <span class="badge badge-green">ENTREGADOS</span>
+      </div>
+      <div class="card-body">
+        <div class="search-row">
+          <input type="number" id="inp-buscar" placeholder="Buscar por ID..." />
+          <button class="btn btn-ghost" onclick="rastrearPaquete()">🔍 Rastrear</button>
+        </div>
+        <div class="search-result" id="search-result">Ingresa un ID para rastrear</div>
+        <br/>
+        <div class="history-list" id="lista-historial">
+          <div class="empty-msg">Sin entregas aún</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- REPORTE + LOG -->
+  <div class="main-grid full-card">
+
+    <!-- REPORTE ORDENADO -->
+    <div class="card">
+      <div class="card-header">
+        <h2>📋 Reporte Ordenado por Costo</h2>
+        <button class="btn btn-warning" style="padding:6px 14px;font-size:0.78rem" onclick="generarReporte()">
+          ⚙️ Ordenar (Merge Sort)
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="report-wrapper">
+          <table class="report-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Destino</th>
+                <th>Peso</th>
+                <th>Costo</th>
+                <th>Tipo</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-reporte">
+              <tr><td colspan="6" style="text-align:center;color:#484f58;padding:24px">Sin datos</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOG DEL SISTEMA -->
+    <div class="card">
+      <div class="card-header">
+        <h2>🖥️ Log del Sistema</h2>
+        <button class="btn btn-ghost" style="padding:6px 14px;font-size:0.78rem" onclick="limpiarLog()">
+          🗑️ Limpiar
+        </button>
+      </div>
+      <div class="card-body">
+        <div class="log-area" id="log-area">
+          <div class="log-line muted">// Sistema iniciado. Esperando operaciones...</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  // ─────────────────────────────────────────────
+  // MODELO
+  // ─────────────────────────────────────────────
+  class PaqueteEnvio {
+    constructor(id, nombre, peso, destino, urgente = false) {
+      this.id       = id;
+      this.nombre   = nombre;
+      this.peso     = peso;
+      this.destino  = destino;
+      this.urgente  = urgente;
+      this.estado   = 'pendiente';
+      this.costo    = +(peso * 0.5).toFixed(2);
+    }
+  }
+
+  // ─────────────────────────────────────────────
+  // COLA CIRCULAR FIFO
+  // ─────────────────────────────────────────────
+  class ColaDespacho {
+    constructor() {
+      this.capacidad = 25000;
+      this.arreglo   = new Array(this.capacidad).fill(null);
+      this.inicio    = 0;
+      this.fin       = 0;
+      this.tamaño    = 0;
+    }
+
+    encolar(paquete) {
+      if (this.estaLlena()) return false;
+      this.arreglo[this.fin] = paquete;
+      this.fin = (this.fin + 1) % this.capacidad;
+      this.tamaño++;
+      return true;
+    }
+
+    desencolar() {
+      if (this.estaVacia()) return null;
+      const paquete = this.arreglo[this.inicio];
+      this.arreglo[this.inicio] = null;
+      this.inicio = (this.inicio + 1) % this.capacidad;
+      this.tamaño--;
+      return paquete;
+    }
+
+    verSiguiente() {
+      return this.estaVacia() ? null : this.arreglo[this.inicio];
+    }
+
+    estaVacia()  { return this.tamaño === 0; }
+    estaLlena()  { return this.tamaño === this.capacidad; }
+
+    get paquetes() {
+      const lista = [];
+      for (let i = 0; i < this.tamaño; i++) {
+        lista.push(this.arreglo[(this.inicio + i) % this.capacidad]);
+      }
+      return lista;
+    }
+  }
+
+  // ─────────────────────────────────────────────
+  // PILA LIFO
+  // ─────────────────────────────────────────────
+  class PilaEnvioUrgente {
+    constructor() { this.paquetes = []; }
+    apilar(p)    { this.paquetes.push(p); }
+    desapilar()  { return this.paquetes.pop() || null; }
+    verCima()    { return this.paquetes[this.paquetes.length - 1] || null; }
+    estaVacia()  { return this.paquetes.length === 0; }
+  }
+
+  // ─────────────────────────────────────────────
+  // MERGE SORT
+  // ─────────────────────────────────────────────
+  function mergeSort(lista) {
+    if (lista.length <= 1) return lista;
+    const mid = Math.floor(lista.length / 2);
+    return merge(mergeSort(lista.slice(0, mid)), mergeSort(lista.slice(mid)));
+  }
+
+  function merge(izq, der) {
+    const res = [];
+    let i = 0, j = 0;
+    while (i < izq.length && j < der.length) {
+      res.push(izq[i].costo <= der[j].costo ? izq[i++] : der[j++]);
+    }
+    return res.concat(izq.slice(i)).concat(der.slice(j));
+  }
+
+  // ─────────────────────────────────────────────
+  // RASTREO RECURSIVO
+  // ─────────────────────────────────────────────
+  function buscarPorId(lista, id, i = 0) {
+    if (i >= lista.length) return null;
+    if (lista[i].id === id) return lista[i];
+    return buscarPorId(lista, id, i + 1);
+  }
+
+  function calcularCostoTotal(lista, i = 0, total = 0) {
+    if (i >= lista.length) return total;
+    return calcularCostoTotal(lista, i + 1, total + lista[i].costo);
+  }
+
+  // ─────────────────────────────────────────────
+  // GESTOR
+  // ─────────────────────────────────────────────
+  const cola      = new ColaDespacho();
+  const pila      = new PilaEnvioUrgente();
+  const historial = [];
+  let   contador  = 1;
+  let   costoTotal = 0;
+
+  // ─────────────────────────────────────────────
+  // FUNCIONES UI
+  // ─────────────────────────────────────────────
+  function log(msg, tipo = 'info') {
+    const area = document.getElementById('log-area');
+    const line = document.createElement('div');
+    line.className = `log-line ${tipo}`;
+    line.textContent = msg;
+    area.appendChild(line);
+    area.scrollTop = area.scrollHeight;
+  }
+
+  function limpiarLog() {
+    document.getElementById('log-area').innerHTML =
+      '<div class="log-line muted">// Log limpiado.</div>';
+  }
+
+  function actualizarStats() {
+    document.getElementById('stat-fifo').textContent       = cola.tamaño.toLocaleString();
+    document.getElementById('stat-lifo').textContent       = pila.paquetes.length;
+    document.getElementById('stat-entregados').textContent = historial.length;
+    document.getElementById('stat-costo').textContent      = `$${costoTotal.toFixed(2)}`;
+    document.getElementById('ptr-inicio').textContent      = cola.inicio;
+    document.getElementById('ptr-fin').textContent         = cola.fin;
+    document.getElementById('ptr-activos').textContent     = cola.tamaño;
+  }
+
+  function renderFIFO() {
+    const lista = cola.paquetes;
+    const el    = document.getElementById('lista-fifo');
+    if (lista.length === 0) {
+      el.innerHTML = '<div class="empty-msg">Cola vacía</div>';
+      return;
+    }
+    el.innerHTML = lista.slice(0, 50).map((p, i) => `
+      <div class="pkg-item normal">
+        <span class="pkg-pos">#${i + 1}</span>
+        <div style="flex:1">
+          <div class="pkg-name">${p.nombre}</div>
+          <div class="pkg-meta">${p.destino} · ${p.peso}kg</div>
+        </div>
+        <span class="pkg-cost">$${p.costo}</span>
+      </div>
+    `).join('') + (lista.length > 50
+      ? `<div class="empty-msg">... y ${(lista.length - 50).toLocaleString()} más</div>` : '');
+  }
+
+  function renderLIFO() {
+    const lista = [...pila.paquetes].reverse();
+    const el    = document.getElementById('lista-lifo');
+    if (lista.length === 0) {
+      el.innerHTML = '<div class="empty-msg">Pila vacía</div>';
+      return;
+    }
+    el.innerHTML = lista.map((p, i) => `
+      <div class="pkg-item urgente">
+        <span class="pkg-pos">${i === 0 ? '🔝 CIMA' : `#${i + 1}`}</span>
+        <div style="flex:1">
+          <div class="pkg-name">${p.nombre}</div>
+          <div class="pkg-meta">${p.destino} · ${p.peso}kg</div>
+        </div>
+        <span class="pkg-cost">$${p.costo}</span>
+      </div>
+    `).join('');
+  }
+
+  function renderHistorial() {
+    const el   = document.getElementById('lista-historial');
+    const lista = [...historial].reverse();
+    if (lista.length === 0) {
+      el.innerHTML = '<div class="empty-msg">Sin entregas aún</div>';
+      return;
+    }
+    el.innerHTML = lista.slice(0, 40).map(p => `
+      <div class="history-item">
+        <span><strong>#${p.id}</strong> ${p.nombre}</span>
+        <span style="color:#8b949e;font-size:0.76rem">${p.destino}</span>
+        <span class="pkg-cost">$${p.costo}</span>
+      </div>
+    `).join('');
+  }
+
+  function renderTodo() {
+    renderFIFO();
+    renderLIFO();
+    renderHistorial();
+    actualizarStats();
+  }
+
+  // ─────────────────────────────────────────────
+  // ACCIONES
+  // ─────────────────────────────────────────────
+  function registrarPaquete() {
+    const nombre  = document.getElementById('inp-nombre').value.trim();
+    const peso    = parseFloat(document.getElementById('inp-peso').value);
+    const destino = document.getElementById('inp-destino').value.trim();
+    const urgente = document.getElementById('inp-urgente').value === 'true';
+
+    if (!nombre || !peso || !destino) {
+      log('⚠️  Completa todos los campos antes de registrar.', 'warning');
+      return;
+    }
+
+    const paquete = new PaqueteEnvio(contador++, nombre, peso, destino, urgente);
+
+    if (urgente) {
+      pila.apilar(paquete);
+      log(`🔴 [LIFO] "${paquete.nombre}" apilado como urgente. Costo: $${paquete.costo}`, 'error');
+    } else {
+      if (cola.estaLlena()) {
+        log('⚠️  Cola llena. No se puede registrar más paquetes normales.', 'warning');
+        return;
+      }
+      cola.encolar(paquete);
+      log(`📦 [FIFO] "${paquete.nombre}" encolado. Posición: ${cola.tamaño}. Costo: $${paquete.costo}`, 'info');
+    }
+
+    document.getElementById('inp-nombre').value  = '';
+    document.getElementById('inp-peso').value    = '';
+    document.getElementById('inp-destino').value = '';
+
+    renderTodo();
+  }
+
+  function procesarEntrega() {
+    let paquete = null;
+
+    if (!pila.estaVacia()) {
+      paquete = pila.desapilar();
+      log(`🚨 [LIFO] Entregado urgente: "${paquete.nombre}" → ${paquete.destino}`, 'error');
+    } else if (!cola.estaVacia()) {
+      paquete = cola.desencolar();
+      log(`🚚 [FIFO] Entregado normal: "${paquete.nombre}" → ${paquete.destino}`, 'success');
+    } else {
+      log('✅ No hay paquetes pendientes por despachar.', 'success');
+      return;
+    }
+
+    paquete.estado = 'entregado';
+    historial.push(paquete);
+    costoTotal += paquete.costo;
+    renderTodo();
+  }
+
+  function procesarTodo(i = 0) {
+    if (pila.estaVacia() && cola.estaVacia()) {
+      log(`✅ Procesamiento recursivo completado. Total entregados: ${historial.length}`, 'success');
+      renderTodo();
+      return;
+    }
+    procesarEntrega();
+    setTimeout(() => procesarTodo(i + 1), 0);
+  }
+
+  function rastrearPaquete() {
+    const id  = parseInt(document.getElementById('inp-buscar').value);
+    const res = document.getElementById('search-result');
+
+    if (isNaN(id)) {
+      res.className = 'search-result';
+      res.textContent = 'Ingresa un ID válido.';
+      return;
+    }
+
+    const encontrado = buscarPorId(historial, id);
+
+    if (encontrado) {
+      res.className   = 'search-result found';
+      res.innerHTML   = `✅ <strong>#${encontrado.id} ${encontrado.nombre}</strong> — ${encontrado.destino} — $${encontrado.costo} — ${encontrado.estado}`;
+      log(`🔍 Rastreo recursivo: ID ${id} encontrado → "${encontrado.nombre}"`, 'success');
+    } else {
+      res.className   = 'search-result not-found';
+      res.textContent = `❌ ID ${id} no encontrado en el historial.`;
+      log(`🔍 Rastreo recursivo: ID ${id} no existe en el historial.`, 'warning');
+    }
+  }
+
+  function generarReporte() {
+    const todos     = [...cola.paquetes, ...pila.paquetes];
+    const ordenados = mergeSort(todos);
+    const tbody     = document.getElementById('tabla-reporte');
+
+    if (ordenados.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#484f58;padding:24px">Sin paquetes pendientes</td></tr>';
+      log('⚠️  No hay paquetes pendientes para ordenar.', 'warning');
+      return;
+    }
+
+    tbody.innerHTML = ordenados.map((p, i) => `
+      <tr>
+        <td style="color:#8b949e">${i + 1}</td>
+        <td><strong>${p.nombre}</strong></td>
+        <td style="color:#8b949e">${p.destino}</td>
+        <td>${p.peso}kg</td>
+        <td class="pkg-cost">$${p.costo}</td>
+        <td><span class="badge ${p.urgente ? 'badge-red' : 'badge-blue'}">${p.urgente ? 'URGENTE' : 'NORMAL'}</span></td>
+      </tr>
+    `).join('');
+
+    log(`📋 Merge Sort completado. ${ordenados.length} paquetes ordenados por costo.`, 'info');
+  }
+</script>
+</body>
+</html>
