@@ -1,9 +1,9 @@
 // Estructura del Nodo del Índice
 class NodoBusqueda {
     constructor(keyword, urlCache) {
-        this.keyword = keyword         // Llave de búsqueda (ej. "estructura de datos")
-        this.urlCache = urlCache       // Valor (ej. "es.wikipedia.org/...")
-        this.visitas = 1           // Frecuencia de búsqueda
+        this.keyword = keyword         
+        this.urlCache = urlCache       
+        this.visitas = 1           
         this.izquierdo = null
         this.derecho = null
     }
@@ -65,26 +65,32 @@ class MotorIndexacionBST {
     }
   }
 
-  buscar(keyword) {
-    let actual = this.raiz;
-    while (actual !== null) {
-      const comparacion = keyword.localeCompare(actual.keyword);
-      if (comparacion === 0) {
-        return actual; // Encontrado
-      }
-      actual = comparacion < 0 ? actual.izquierdo : actual.derecho;
+ buscar(keyword) {
+        let actual = this.raiz;
+        while (actual !== null) {
+            if (keyword === actual.keyword) {
+                return actual;
+            } else if (keyword < actual.keyword) {
+                actual = actual.izquierdo;
+            } else {
+                actual = actual.derecho;
+            }
+        }
+        return null; // No encontrado
     }
-    return null; // No encontrado
-  }
 
-  // Recorrido Inorden: exporta el historial ordenado alfabéticamente (A-Z)
-  exportarHistorial(nodo = this.raiz, resultado = []) {
-    if (nodo !== null) {
-      this.exportarHistorial(nodo.izquierdo, resultado);
-      resultado.push({ keyword: nodo.keyword, urlCache: nodo.urlCache, visitas: nodo.visitas });
-      this.exportarHistorial(nodo.derecho, resultado);
-    }
-    return resultado;
-  }
+    // Recorrido Inorden: exporta el historial ordenado alfabéticamente (A-Z)
+    exportarHistorial(nodo = this.raiz, resultado = []) {
+        if (nodo !== null) {
+            this.exportarHistorial(nodo.izquierdo, resultado);
+            resultado.push({
+                keyword: nodo.keyword,
+                urlCache: nodo.urlCache,
+                visitas: nodo.visitas
+            });
+            this.exportarHistorial(nodo.derecho, resultado);
+        }
+        return resultado;
+    }  
 
 } 
